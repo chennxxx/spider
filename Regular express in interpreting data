@@ -1,0 +1,48 @@
+import requests
+import os
+import re
+
+#create a folder
+if not os.path.exists('./jiandanLib'):
+    os.mkdir('./jiandanLib')
+
+#request url
+url = 'http://jandan.net/'
+
+headers = {
+    'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36'
+}
+
+#save web content into page_text
+page_text = requests.get(url=url,headers=headers).text
+
+#use regular express to get 'image src'
+ex = '<div class="thumbs_b">.*?<img src="(.*?)" width=.*?<div class="indexs">'
+img_src_list = re.findall(ex,page_text,re.S)
+#print(img_src_list)
+
+#remove‘！image’ belong with each url
+img_src_list_n = []
+for img in img_src_list:
+    img = img.split('!')[0]
+    #print(img)
+    img_src_list_n.append(img)
+#print(img_src_list_n)
+
+#get image and save in local
+for src in img_src_list_n:
+    src = 'https:'+src
+    img_data = requests.get(url=src,headers=headers).content
+    #print(img_data)
+    img_name = src.split('/')[-1]
+    #print(img_name)
+    imgPath = './jiandanLib/'+img_name
+    with open(imgPath,'wb') as fp:
+        fp.write(img_data)
+        print(img_name +'成功')
+    
+    
+
+
+
+        
