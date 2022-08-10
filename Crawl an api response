@@ -1,7 +1,9 @@
+#爬取分页接口
 for i in range(1,33):
 
     url = f'https://api.1point3acres.com/offer/colleges-search?ps=20&pg={i}'
-
+    
+    #注意payload
     data = {
             "filters":{
             },
